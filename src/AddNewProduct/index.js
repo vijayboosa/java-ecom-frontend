@@ -26,8 +26,8 @@ export default function AddNewProduct(){
         fetch("/add/", {
             method: "post",
             body: JSON.stringify({name, description, image, category,
-                                        price: parseFloat(price), quantity,
-                                        min_quantity})
+                                        price: parseFloat(price), quantity: parseFloat(quantity),
+                                        min_quantity: parseFloat(min_quantity)})
         }).then(e => e.json()).then(e=>{
             if (e.success){
                 toast.success("product added successfully")
