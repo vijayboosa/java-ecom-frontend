@@ -9,6 +9,7 @@ export default function NavigationBar(){
                 <Nav className="ml-auto">
                     <Nav.Link href="#home">Home</Nav.Link>
                     <Nav.Link href="#link">Add New Item</Nav.Link>
+                    <Nav.Link href="#link">Logout</Nav.Link>
                 </Nav>
             </Navbar.Collapse>
         </Navbar>
