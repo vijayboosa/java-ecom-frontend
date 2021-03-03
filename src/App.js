@@ -6,6 +6,7 @@ import {useState} from "react";
 import Register from "./register";
 import Cart from "./cart";
 import AdminPage from "./admin";
+import Orders from "./orders";
 
 
 function App() {
@@ -13,7 +14,7 @@ function App() {
     const [adminState, setAdminState] = useState(false);
     const [currentPage, setCurrentPage] = useState('login');
     const [cartProducts, setCartProduct] = useState({});
-    const [homeOrCartPage, setHomeOrCartPage] = useState('home');
+    const [userPageToShow, setHomeOrCartPage] = useState('home');
     const [adminCurrentPage, setAdminCurrentPage] = useState('home');
     let pageToShow;
 
@@ -104,9 +105,12 @@ function App() {
         if (adminState) {
             pageToShow = <AdminPage currentPage = {adminCurrentPage} setCurrentPage={setAdminCurrentPage}/>
         } else {
-            if (homeOrCartPage == 'cart') {
+            if (userPageToShow == 'cart') {
                 pageToShow = <Cart cartItems={cartProducts} quantityButton={addProductToCart} getTotalCartValue={totalCartItemsValue}/>
-            } else {
+            } else if (userPageToShow  == "orders") {
+                pageToShow = <Orders/>
+            }
+            else {
                 pageToShow = <Products addProductToCart={addProductToCart}/>
             }
         }

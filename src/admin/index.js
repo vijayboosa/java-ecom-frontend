@@ -2,6 +2,7 @@ import AdminViewProducts from "./viewproducts";
 import AddNewProduct from "../AddNewProduct";
 import EditProduct from "./editProduct";
 import {useState} from "react";
+import Orders from "./orders";
 
 export default function AdminPage(props) {
     const {currentPage, setCurrentPage} = props;
@@ -13,6 +14,8 @@ export default function AdminPage(props) {
         return (<AddNewProduct/>);
     } else if (currentPage === "editProduct") {
         return (<EditProduct editProductDetails={editProduct}/>)
+    }else if (currentPage === 'orders') {
+        return (<Orders/>);
     }
 
 }
