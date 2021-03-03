@@ -1,8 +1,9 @@
+import {useEffect, useState} from "react";
+import toast, {Toaster} from "react-hot-toast";
 import {Button, Form} from "react-bootstrap";
-import {useState} from "react";
-import toast, {Toaster} from 'react-hot-toast';
 
-export default function AddNewProduct(props) {
+export default function EditProduct(props) {
+    const {editProductDetails} = props;
     const [image, setImage] = useState();
     const [name, setName] = useState("");
     const [description, setDescription] = useState("");
@@ -11,35 +12,54 @@ export default function AddNewProduct(props) {
     const [quantity, setQuantity] = useState("");
     const [min_quantity, setMinQuantity] = useState("");
 
-    const handleChange = (e) => {
-        const reader = new FileReader();
-        reader.addEventListener('load', (event) => {
-            setImage(event.target.result);
-        });
-        reader.readAsDataURL(e.target.files[0])
-    }
+    useEffect(() => {
+        console.log(editProductDetails);
+        if (editProductDetails.value) {
+            setImage(editProductDetails.value.image);
+            setName(editProductDetails.value.name);
+            setDescription(editProductDetails.value.description);
+            setCategory(editProductDetails.value.category);
+            setPrice(editProductDetails.value.price);
+            setQuantity(editProductDetails.value.quantity);
+            setMinQuantity(editProductDetails.value.min_quantity);
+        }
+    }, []);
+
+
     const handleSubmit = (e) => {
         e.preventDefault();
         if (!name || !description || !category || !price || !image || !quantity || !min_quantity) {
             toast.error("fill all the values")
             return
         }
-        fetch("/add/", {
-            method: "post",
-            body: JSON.stringify({
-                name, description, image, category,
-                price: parseFloat(price), quantity: parseFloat(quantity),
-                min_quantity: parseFloat(min_quantity)
-            })
-        }).then(e => e.json()).then(e => {
-            if (e.success) {
-                toast.success("product added successfully")
-            } else {
-                toast.error("product failed to add")
+        console.log('Edit Product value')
+        const update = {
+            id: Number(editProductDetails.value.id),
+            image: image,
+            name: name,
+            description: description,
+            category: category,
+            price: Number(price),
+            min_quantity: Number(min_quantity),
+            quantity: Number(quantity)
+        };
+        console.log(update);
+        fetch('/update/', {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(update),
+        }).then(response => response.json()).then((data) => {
+            console.log('Response put');
+            if (data.success === 1) {
+                toast.success('Successfully Edited');
+            }else {
+                toast.error('Failed Edit');
             }
-        }).catch(e => {
-            toast.error("product failed to add")
-        })
+        }).catch((error) => {
+            console.log(error)
+        });
     }
     return (
         <Form className='mt-5 m-auto' style={{width: 600, marginTop: 50}}>
@@ -77,14 +97,13 @@ export default function AddNewProduct(props) {
                 <Form.Control type="number" placeholder="Min Quantity" value={min_quantity}
                               onChange={event => setMinQuantity(event.target.value)}/>
             </Form.Group>
-
-            <Form.Group controlId="fromBasicProduct">
-                {image && <img src={image} width={200} alt={'selected'}/>}
-                <Form.File id="custom-file" label="Image" accept="image/*" onChange={handleChange} custom/>
-            </Form.Group>
+            {/*<Form.Group controlId="fromBasicProduct">*/}
+            {/*    {image && <img src={image} width={200} alt={'selected'}/>}*/}
+            {/*    <Form.File id="custom-file" label="Image" accept="image/*" onChange={handleChange} custom/>*/}
+            {/*</Form.Group>*/}
             <Toaster/>
             <Button variant="primary" type="submit" onClick={handleSubmit}>
-                Submit
+                Edit
             </Button>
         </Form>
     )

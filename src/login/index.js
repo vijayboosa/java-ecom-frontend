@@ -2,7 +2,7 @@ import {Button, Form} from "react-bootstrap";
 import {useState} from "react";
 import toast, {Toaster} from 'react-hot-toast';
 
-export default function Login() {
+export default function Login({handleLogin}) {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
@@ -18,7 +18,13 @@ export default function Login() {
         }).then(e => e.json()).then(e=>{
             console.log(e)
             if (e.success){
-                toast.success("Login successful")
+                localStorage["email"] = email
+                if (e.admin) {
+                    handleLogin('admin')
+                }
+                else {
+                    handleLogin();
+                }
             }
             else {
                 toast.error("wrong id or password")
